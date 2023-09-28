@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<config>
+    <listaDrones>
+        <dron>Drone1</dron>
+        <dron>Drone2</dron>
+        <dron>Drone3</dron>
+    </listaDrones>
+
+    <listaSistemasDrones>
+        <sistemaDrones nombre="Sistema1">
+            <alturaMaxima>100</alturaMaxima>
+            <cantidadDrones>3</cantidadDrones>
+            <contenido>
+                <dron>Drone1</dron>
+                <alturas>
+                    <altura valor="50">Drone1</altura>
+                    <altura valor="60">Drone2</altura>
+                    <altura valor="70">Drone3</altura>
+                </alturas>
+            </contenido>
+        </sistemaDrones>
+        <sistemaDrones nombre="Sistema2">
+            <alturaMaxima>200</alturaMaxima>
+            <cantidadDrones>2</cantidadDrones>
+            <contenido>
+                <dron>Drone2</dron>
+                <alturas>
+                    <altura valor="80">Drone2</altura>
+                    <altura valor="90">Drone3</altura>
+                </alturas>
+            </contenido>
+        </sistemaDrones>
+    </listaSistemasDrones>
+
+    <listaMensajes>
+        <Mensaje nombre="Mensaje1">
+            <sistemaDrones>Sistema1</sistemaDrones>
+            <instrucciones>
+                <instruccion dron="Drone1">50</instruccion>
+                <instruccion dron="Drone2">60</instruccion>
+                <instruccion dron="Drone3">70</instruccion>
+            </instrucciones>
+        </Mensaje>
+        <Mensaje nombre="Mensaje2">
+            <sistemaDrones>Sistema2</sistemaDrones>
+            <instrucciones>
+                <instruccion dron="Drone2">80</instruccion>
+                <instruccion dron="Drone3">90</instruccion>
+            </instrucciones>
+        </Mensaje>
+    </listaMensajes>
+</config>
