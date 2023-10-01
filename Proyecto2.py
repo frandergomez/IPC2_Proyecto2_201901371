@@ -1,9 +1,32 @@
 import tkinter as tk
-from tkinter import Menu, Text, filedialog, messagebox
+import os
+import webbrowser
+from tkinter import ttk, Menu, Text, filedialog, messagebox
+import PyPDF2
 import xml.etree.ElementTree as ET
+import graphviz
 
 # Lista para almacenar los nombres de los drones
 lista_drones = []
+
+manuales_dir = "E:\\USAC_2023\\SEGUNDO SEMESTRE\\LAB_IPC2\\IPC2_Proyecto2_#201901371"
+
+
+# Estructura de ejemplo para los mensajes e instrucciones
+mensajes = {
+    "Mensaje1": {
+        "SistemaDrones": "Sistema 1",
+        "Mensaje": "Mensaje de prueba 1",
+        "TiempoOptimo": "5 minutos",
+        "Instrucciones": ["Instrucción 1", "Instrucción 2", "Instrucción 3"],
+    },
+    "Mensaje2": {
+        "SistemaDrones": "Sistema 2",
+        "Mensaje": "Mensaje de prueba 2",
+        "TiempoOptimo": "10 minutos",
+        "Instrucciones": ["Instrucción 4", "Instrucción 5", "Instrucción 6"],
+    },
+}
 
 # Funciones para las etiquetas
 def mostrar_opciones_archivo():
@@ -103,12 +126,86 @@ def agregar_dron():
         messagebox.showerror("Error", "Por favor, ingresa un nombre de dron válido.")
 
 def gestion_mensajes():
-    # Coloca aquí el código para gestionar mensajes
-    pass
+    ventana_mensajes = tk.Toplevel(ventana2)
+    ventana_mensajes.title("Gestión de Mensajes")
+
+    # Ver listado de mensajes y sus instrucciones
+    tabla_mensajes = ttk.Treeview(ventana_mensajes, columns=("Mensaje", "Sistema", "Tiempo Óptimo"), show="headings")
+    tabla_mensajes.heading("Mensaje", text="Mensaje")
+    tabla_mensajes.heading("Sistema", text="Sistema")
+    tabla_mensajes.heading("Tiempo Óptimo", text="Tiempo Óptimo")
+
+    for mensaje, info in mensajes.items():
+        sistema = info["SistemaDrones"]
+        tiempo_optimo = info["TiempoOptimo"]
+        tabla_mensajes.insert("", "end", values=(mensaje, sistema, tiempo_optimo))
+
+    tabla_mensajes.pack()
+
+    # Ver instrucciones para enviar un mensaje
+    def mostrar_info_mensaje():
+        seleccion = tabla_mensajes.selection()
+        if seleccion:
+            mensaje_seleccionado = tabla_mensajes.item(seleccion[0], "values")[0]
+            info = mensajes.get(mensaje_seleccionado)
+            if info:
+                sistema = info["SistemaDrones"]
+                mensaje = info["Mensaje"]
+                tiempo_optimo = info["TiempoOptimo"]
+                instrucciones = "\n".join(info["Instrucciones"])
+
+                info_mensaje = f"Nombre del Sistema de Drones: {sistema}\nMensaje: {mensaje}\nTiempo Óptimo: {tiempo_optimo}\nInstrucciones:\n{instrucciones}"
+                messagebox.showinfo("Información del Mensaje", info_mensaje)
+            else:
+                messagebox.showerror("Error", "No se encontró información para el mensaje seleccionado.")
+
+    boton_ver_info = tk.Button(ventana_mensajes, text="Ver Información", command=mostrar_info_mensaje)
+    boton_ver_info.pack()
+
+     # Ver gráficamente (utilizando Graphviz) el listado de instrucciones
+    def mostrar_diagrama():
+        seleccion = tabla_mensajes.selection()
+        if seleccion:
+            mensaje_seleccionado = tabla_mensajes.item(seleccion[0], "values")[0]
+            info = mensajes.get(mensaje_seleccionado)
+            if info and "Instrucciones" in info:
+                instrucciones = info["Instrucciones"]
+
+                # Crear un diagrama con Graphviz
+                dot = graphviz.Digraph(comment="Instrucciones del Mensaje")
+                for i, instruccion in enumerate(instrucciones, start=1):
+                    dot.node(f"Instrucción {i}", instruccion)
+
+                # Guardar el diagrama en un archivo y abrirlo
+                dot.render("instrucciones_diagrama")
+                dot.view("instrucciones_diagrama")
+            else:
+                messagebox.showerror("Error", "No se encontraron instrucciones para el mensaje seleccionado.")
+
+    boton_ver_diagrama = tk.Button(ventana_mensajes, text="Ver Diagrama de Instrucciones", command=mostrar_diagrama)
+    boton_ver_diagrama.pack()
+
+def abrir_manual1():
+    # Abre el Manual 1 en PDF
+    manual1_path = os.path.join(manuales_dir, "ManualUsuario_201901371.pdf")
+    webbrowser.open_new(manual1_path)
+
+def abrir_manual2():
+    # Abre el Manual 2 en PDF
+    manual2_path = os.path.join(manuales_dir, "ManualTecnico_201901371.pdf")
+    webbrowser.open_new(manual2_path)
 
 def ayuda():
-    # Coloca aquí el código para mostrar ayuda
-    pass
+    # Crear una ventana emergente para mostrar las opciones de ayuda
+    ventana_ayuda = tk.Toplevel(ventana2)
+    ventana_ayuda.title("Ayuda")
+
+    # Crear botones para abrir los manuales
+    boton_manual1 = tk.Button(ventana_ayuda, text="ManualUsuario_201901371", command=abrir_manual1)
+    boton_manual1.pack()
+
+    boton_manual2 = tk.Button(ventana_ayuda, text="ManualTecnico_201901371", command=abrir_manual2)
+    boton_manual2.pack()
 
 # Función para cambiar de ventana
 def cambiar_ventana():
@@ -179,6 +276,7 @@ boton_ver_drones = tk.Button(frame_gestion_drones, text="Ver Drones", command=ge
 boton_ver_drones.pack(side="left")
 
 ventana2.geometry("600x400")
+
 
 # Ejecutar la aplicación
 ventana1.mainloop()
