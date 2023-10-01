@@ -33,37 +33,31 @@ def mostrar_opciones_archivo():
     archivo_menu.post(label1.winfo_rootx(), label1.winfo_rooty() + label1.winfo_height())
 
 def cargar_archivo():
-    # Mostrar un cuadro de diálogo para seleccionar un archivo XML
     archivo_path = filedialog.askopenfilename(filetypes=[("Archivos XML", "*.xml")])
 
     if archivo_path:
-        # Leer el contenido del archivo y cargarlo en la caja de texto
         with open(archivo_path, "r") as archivo:
             contenido = archivo.read()
-            archivo_text.delete(1.0, tk.END)  # Limpia el contenido existente en la caja de texto
-            archivo_text.insert(tk.END, contenido)  # Inserta el contenido del archivo XML en la caja de texto
+            archivo_text.delete(1.0, tk.END)
+            archivo_text.insert(tk.END, contenido)
 
 def guardar_como():
     archivo_guardar = filedialog.asksaveasfilename(defaultextension=".xml", filetypes=[("Archivos XML", "*.xml")])
 
     if archivo_guardar:
         try:
-            # Obtener el contenido de la caja de texto
             contenido = archivo_text.get(1.0, tk.END)
             
-            # Guardar el contenido en el archivo seleccionado
             with open(archivo_guardar, "w") as archivo:
                 archivo.write(contenido)
 
         except Exception as e:
-            # Manejar cualquier error que pueda ocurrir al guardar el archivo
             messagebox.showerror("Error", f"Error al guardar el archivo: {str(e)}")
 
 def salir():
     ventana2.quit()
 
 def generar_archivo_xml():
-    # Crear un elemento raíz para el archivo XML
     root = ET.Element("Instrucciones")
 
     # Agregar instrucciones para el sistema de drones 1
@@ -92,10 +86,8 @@ def generar_archivo_xml():
     tiempo_2 = ET.SubElement(sistema_drones_2, "TiempoOptimo")
     tiempo_2.text = "15 minutos"
 
-    # Crear un objeto ElementTree y escribirlo en un archivo XML
     tree = ET.ElementTree(root)
 
-    # Definir automáticamente el nombre del archivo de salida
     nombre_archivo_salida = "instrucciones_drones.xml"
 
     try:
@@ -104,7 +96,6 @@ def generar_archivo_xml():
         print(f"Archivo XML generado con éxito: {nombre_archivo_salida}")
 
     except Exception as e:
-        # Manejar cualquier error que pueda ocurrir al guardar el archivo
         messagebox.showerror("Error", f"Error al generar el archivo XML: {str(e)}")
 
 def gestion_drones():
@@ -119,7 +110,7 @@ def agregar_dron():
         if nuevo_dron not in lista_drones:
             lista_drones.append(nuevo_dron)
             messagebox.showinfo("Éxito", f"Se ha agregado el dron '{nuevo_dron}' con éxito.")
-            entrada_nombre_dron.delete(0, tk.END)  # Limpiar el campo de entrada
+            entrada_nombre_dron.delete(0, tk.END)
         else:
             messagebox.showerror("Error", f"El dron '{nuevo_dron}' ya existe.")
     else:
@@ -196,7 +187,6 @@ def abrir_manual2():
     webbrowser.open_new(manual2_path)
 
 def ayuda():
-    # Crear una ventana emergente para mostrar las opciones de ayuda
     ventana_ayuda = tk.Toplevel(ventana2)
     ventana_ayuda.title("Ayuda")
 
@@ -207,12 +197,10 @@ def ayuda():
     boton_manual2 = tk.Button(ventana_ayuda, text="ManualTecnico_201901371", command=abrir_manual2)
     boton_manual2.pack()
 
-# Función para cambiar de ventana
 def cambiar_ventana():
     ventana1.destroy()
     ventana2.deiconify()
 
-# Configurar la primera ventana
 ventana1 = tk.Tk()
 ventana1.title("201901371_Frander_Carreto")
 
@@ -220,7 +208,6 @@ btn_inicializar = tk.Button(ventana1, text="Inicializar", command=cambiar_ventan
 btn_inicializar.pack()
 ventana1.geometry("300x150")
 
-# Configurar la segunda ventana
 ventana2 = tk.Tk()
 ventana2.title("201901371_Frander_Carreto")
 ventana2.withdraw()
@@ -249,7 +236,7 @@ label5 = tk.Label(ventana2, text="Ayuda", cursor="hand2")
 label5.bind("<Button-1>", lambda event: ayuda())
 
 # Crear una caja de texto para visualizar y editar archivos XML
-archivo_text = Text(ventana2, width=40, height=10)  # Tamaño de la caja de texto
+archivo_text = Text(ventana2, width=40, height=10) 
 archivo_text.pack(fill="both", expand=True)
 
 # Empaquetar las etiquetas horizontalmente
